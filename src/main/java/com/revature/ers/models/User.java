@@ -1,5 +1,7 @@
 package com.revature.ers.models;
 
+import com.revature.ers.dtos.requests.NewUserRequest;
+
 public class User {
     private String id;
     private String username;
@@ -28,6 +30,14 @@ public class User {
     /* What does the constructor provide */
     public User(String id) {
         this.id = id;
+    }
+
+    public User(String toString, String username, String email, String password1) {
+    }
+
+    public User(NewUserRequest req) {
+        this.username = req.getUsername();
+
     }
 
 
