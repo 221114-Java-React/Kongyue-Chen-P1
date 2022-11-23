@@ -2,6 +2,9 @@ package com.revature.ers.utils;
 
 import java.io.FileReader;
 import java.io.IOException;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 import java.util.Properties;
 
 /* Bridges dao to db*/
@@ -24,5 +27,18 @@ public class ConnectionFactory {
         }catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public static ConnectionFactory getInstance() {
+        if(connectionFactory == null){
+            connectionFactory = new ConnectionFactory();
+        }
+        return connectionFactory;
+    }
+
+    public Connection getConnection() throws SQLException {
+        Connection con = DriverManager.getConnection(props.getProperty("url"), props.getProperty("username"), props.getProperty("password"));
+        if(con == null) throw new RuntimeException("Could not establish connection with the database");
+        return con;
     }
 }
