@@ -32,13 +32,13 @@ public class User {
         this.id = id;
     }
 
-    public User(String toString, String username, String email, String password1) {
-    }
-
-    public User(NewUserRequest req) {
-        this.username = req.getUsername();
-
-    }
+//    public User(NewUserRequest req) {
+//        this.username = req.getUsername();
+//        this.email = req.getEmail();
+//        this.pwd = req.getPassword1();
+//        this.givenName = req.getGivenName();
+//        this.surname = req.getSurname();
+//    }
 
 
     /* Getters and setters */

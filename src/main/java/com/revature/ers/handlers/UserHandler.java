@@ -4,6 +4,9 @@ import com.revature.ers.models.User;
 import com.revature.ers.services.UserService;
 import io.javalin.http.Context;
 
+
+// Handles http verbs and endpoints
+// userHandler depends on userServers who depends on userDao || userHandler -> userServices -> userDao
 public class UserHandler {
     private final UserService userService;
 

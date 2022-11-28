@@ -10,10 +10,10 @@ import static io.javalin.apibuilder.ApiBuilder.post;
 
 public class Router {
     public static void router(Javalin app) {
+
         UserDAO userDao = new UserDAO();
         UserService userService = new UserService(userDao);
         UserHandler userHandler = new UserHandler(userService);
-
 
         app.routes(()-> {
             path("/users", () -> {
