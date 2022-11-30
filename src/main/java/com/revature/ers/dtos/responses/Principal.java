@@ -4,17 +4,16 @@ public class Principal {
     private String id;
     private String username;
     private String roleId;
-    private String authorization;
+
 
     public Principal() {
         super();
     }
 
-    public Principal(String id, String username, String roleId, String authorization) {
+    public Principal(String id, String username, String roleId) {
         this.id = id;
         this.username = username;
         this.roleId = roleId;
-        this.authorization = authorization;
     }
 
     public String getId() {
@@ -41,11 +40,12 @@ public class Principal {
         this.roleId = roleId;
     }
 
-    public String getAuthorization() {
-        return authorization;
-    }
-
-    public void setAuthorization(String authorization) {
-        this.authorization = authorization;
+    @Override
+    public String toString() {
+        return "Principal{" +
+                "id='" + id + '\'' +
+                ", username='" + username + '\'' +
+                ", roleId='" + roleId + '\'' +
+                '}';
     }
 }

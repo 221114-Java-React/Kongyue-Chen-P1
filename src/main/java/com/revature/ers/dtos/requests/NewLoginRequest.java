@@ -3,7 +3,9 @@ package com.revature.ers.dtos.requests;
 public class NewLoginRequest {
     private String username;
     private String password;
-
+    public NewLoginRequest() {
+        super();
+    }
     public NewLoginRequest(String username, String password) {
         this.username = username;
         this.password = password;
