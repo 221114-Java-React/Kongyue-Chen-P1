@@ -11,6 +11,7 @@ import static io.javalin.apibuilder.ApiBuilder.post;
 
 public class Router {
     public static void router(Javalin app) {
+
         ObjectMapper mapper = new ObjectMapper();
         UserDAO userDao = new UserDAO();
         UserService userService = new UserService(userDao);

@@ -18,16 +18,19 @@ public class UserService {
     public UserService(UserDAO userDao) {
         this.userDao = userDao;
     }
-
     /*
     Uses the NewUserRequest object to fill out the user constructor
     Also assigns out the default ID, ACTIVE, ROLE
     */
-
     public void saveUser(NewUserRequest req) {
         List<String> usernames = userDao.findAllUserNames();
-        if(!req.getPassword1().equals(req.getPassword2())) throw new InvalidUserException("Password do not match.");
+
+        if(!usernameValidation(req.getUsername())) throw new InvalidUserException("Username needs to be 8-20 Characters");
         if(usernames.contains(req.getUsername())) throw new InvalidUserException("Username is already taken");
+
+        if(!passwordValidation(req.getPassword1())) throw new InvalidUserException("Passwords need to contain minimum of 8 characters");
+        if(!req.getPassword1().equals(req.getPassword2())) throw new InvalidUserException("Password do not match.");
+
 
 
         User createdUser = new User(
@@ -38,11 +41,20 @@ public class UserService {
                 req.getGivenName(),
                 req.getSurname(),
                 true,
-                "DEFAULT"
+                "1"
         );
+
         userDao.save(createdUser);
     }
 
 
+
     //Validation Methods
+    private boolean usernameValidation(String username) {
+        return username.matches("^(?=[a-zA-Z0-9._]{8,20}$)(?!.*[_.]{2})[^_.].*[^_.]$");
+    }
+
+    private boolean passwordValidation(String password) {
+        return password.matches("^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{8,}$");
+    }
 }
