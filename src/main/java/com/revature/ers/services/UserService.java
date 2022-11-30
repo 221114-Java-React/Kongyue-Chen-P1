@@ -2,8 +2,11 @@ package com.revature.ers.services;
 
 
 import com.revature.ers.daos.UserDAO;
+import com.revature.ers.dtos.requests.NewLoginRequest;
 import com.revature.ers.dtos.requests.NewUserRequest;
+import com.revature.ers.dtos.responses.Principal;
 import com.revature.ers.models.User;
+import com.revature.ers.utils.custom_exceptions.InvalidAuthException;
 import com.revature.ers.utils.custom_exceptions.InvalidUserException;
 
 import java.util.List;
@@ -47,6 +50,11 @@ public class UserService {
         userDao.save(createdUser);
     }
 
+    public Principal login(NewLoginRequest req) {
+        User validUser = userDao.getUserByUsernameAndPassword(req.getUsername(), req.getPassword());
+        if(validUser == null) throw new InvalidAuthException("Invalid user or password");
+        return new Principal(validUser.getId(), validUser.getUsername(), validUser.getRoleId(), "");
+    }
 
 
     //Validation Methods
