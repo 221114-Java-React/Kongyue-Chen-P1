@@ -3,6 +3,7 @@ package com.revature.ers.utils;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.revature.ers.daos.UserDAO;
 import com.revature.ers.handlers.AuthHandler;
+import com.revature.ers.handlers.ReimbursementHandler;
 import com.revature.ers.services.TokenService;
 import com.revature.ers.services.UserService;
 import com.revature.ers.handlers.UserHandler;
@@ -17,11 +18,15 @@ public class Router {
         JwtConfig jwtConfig = new JwtConfig();
         TokenService tokenService = new TokenService(jwtConfig);
 
+        //User
         UserDAO userDao = new UserDAO();
         UserService userService = new UserService(userDao);
         UserHandler userHandler = new UserHandler(userService, tokenService, mapper);
+        //Auth
+        AuthHandler  authHandler = new AuthHandler(userService, tokenService, mapper);
+        //Reimbursement
+        ReimbursementHandler reimbursementHandler = new ReimbursementHandler(userService, tokenService, mapper);
 
-        AuthHandler  authHandler = new AuthHandler(userService,tokenService, mapper);
         app.routes(()-> {
             path("/users", () -> {
                 get(userHandler::getAllUsers);
@@ -29,11 +34,12 @@ public class Router {
                 post(c -> userHandler.signup(c) );
             });
 
-            /* Method reference only works for one parameter
-            post(authHandler:: authenticateUser)
-            */
             path("/auth", () -> {
                 post(c -> authHandler.authenticateUser(c) );
+            });
+
+            path("/Reimbursement", () -> {
+                post(c -> reimbursementHandler.submitReimbursement);
             });
         });
     }
