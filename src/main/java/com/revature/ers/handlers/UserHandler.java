@@ -60,6 +60,22 @@ public class UserHandler {
     }
 
     public void getAllUsersByUsername(Context ctx) {
-        String username = ctx.req.getParameter("username");
+
+        try{
+            String token = ctx.req.getHeader("authorization");
+            if(token == null || token.isEmpty()) throw new InvalidAuthException("You are not signed in!");
+            Principal principal = tokenService.extractRequestersDetails(token);
+            if(principal == null) throw new InvalidAuthException("Invalid token");
+            if(!principal.getRoleId().equals("2")) throw new InvalidAuthException("You are not authorized");
+
+            String username = ctx.req.getParameter("username");
+            List<User> users =userService.getAllUsersByUsername(username);
+            ctx.json(users);
+
+        } catch (InvalidAuthException e) {
+            ctx.status(401);
+            ctx.json(e);
+        }
+
     }
 }

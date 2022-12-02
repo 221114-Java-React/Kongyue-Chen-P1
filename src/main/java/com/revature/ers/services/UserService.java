@@ -60,6 +60,10 @@ public class UserService {
         return userDao.findAll();
     }
 
+    public List<User> getAllUsersByUsername(String username) {
+        return userDao.getAllUsersByUsername(username);
+    }
+
 
     //Validation Methods
     private boolean usernameValidation(String username) {
