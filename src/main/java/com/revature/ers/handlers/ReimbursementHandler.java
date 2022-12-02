@@ -1,8 +1,8 @@
 package com.revature.ers.handlers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.revature.ers.dtos.requests.NewReimUpdateRequest;
 import com.revature.ers.dtos.requests.NewReimbursementRequest;
-import com.revature.ers.dtos.requests.NewUserRequest;
 import com.revature.ers.dtos.responses.Principal;
 import com.revature.ers.models.Reimbursement;
 import com.revature.ers.services.ReimbursementService;
@@ -44,6 +44,39 @@ public class ReimbursementHandler {
             ctx.json(e);
         }
     }
+    public void updateReimbursement(Context ctx) throws IOException {
+        NewReimUpdateRequest req = mapper.readValue(ctx.req.getInputStream(), NewReimUpdateRequest.class);
+        try{
+            String token = ctx.req.getHeader("authorization");
+            if(token == null || token.isEmpty()) throw new InvalidAuthException("You are not signed in!");
+            Principal principal = tokenService.extractRequestersDetails(token);
+            if(principal == null) throw new InvalidAuthException("Invalid token");
+            logger.info("Principal: "+principal.toString());
 
+            reimbursementService.updateReimbursement(req);
+            ctx.status(201);
+        } catch (InvalidAuthException e) {
+            ctx.status(401);
+            ctx.json(e);
+        }
+    }
+
+    public void getAllReimbursement(Context ctx) {
+
+        try{
+            String token = ctx.req.getHeader("authorization");
+            if(token == null || token.isEmpty()) throw new InvalidAuthException("You are not signed in!");
+            Principal principal = tokenService.extractRequestersDetails(token);
+            if(principal == null) throw new InvalidAuthException("Invalid token");
+            if(!principal.getRoleId().equals("2")) throw new InvalidAuthException("You are not authorized");
+            logger.info("Principal: "+principal.toString());
+
+            List<Reimbursement> reimbursements = reimbursementService.getAllReimbursements();
+            ctx.json(reimbursements);
+        } catch (InvalidAuthException e) {
+            ctx.status(401);
+            ctx.json(e);
+        }
+    }
 
 }

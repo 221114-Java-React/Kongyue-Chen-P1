@@ -1,11 +1,13 @@
 package com.revature.ers.services;
 
 import com.revature.ers.daos.ReimbursementDAO;
+import com.revature.ers.dtos.requests.NewReimUpdateRequest;
 import com.revature.ers.dtos.requests.NewReimbursementRequest;
 import com.revature.ers.models.Reimbursement;
 import com.revature.ers.utils.custom_exceptions.InvalidReimException;
 
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 
@@ -34,5 +36,13 @@ public class ReimbursementService {
                 req.getType_id()
         );
         reimbursementDAO.save(createdReimbursement);
+    }
+
+    public List<Reimbursement> getAllReimbursements() {
+        return reimbursementDAO.findAll();
+    }
+
+    public void updateReimbursement(NewReimUpdateRequest req) {
+        reimbursementDAO.updateReinbursement(req);
     }
 }
