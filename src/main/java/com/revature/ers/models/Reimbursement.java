@@ -1,6 +1,7 @@
 package com.revature.ers.models;
 
 
+import java.sql.Blob;
 import java.util.Date;
 
 public class Reimbursement {
@@ -9,6 +10,7 @@ public class Reimbursement {
     private Date submitted;
     private Date resolved;
     private String description;
+    private Blob receipt;
     private String payment_id;
     private String author_id;
     private String resolver_id;
@@ -20,12 +22,13 @@ public class Reimbursement {
         super();
     }
 
-    public Reimbursement(String id, double amount, Date submitted, Date resolved, String description, String payment_id, String author_id, String resolver_id, String status_id, String type_id) {
+    public Reimbursement(String id, double amount, Date submitted, Date resolved, String description, Blob receipt, String payment_id, String author_id, String resolver_id, String status_id, String type_id) {
         this.id = id;
         this.amount = amount;
         this.submitted = submitted;
         this.resolved = resolved;
         this.description = description;
+        this.receipt = receipt;
         this.payment_id = payment_id;
         this.author_id = author_id;
         this.resolver_id = resolver_id;
@@ -73,6 +76,14 @@ public class Reimbursement {
         this.description = description;
     }
 
+    public Blob getReceipt() {
+        return receipt;
+    }
+
+    public void setReceipt(Blob receipt) {
+        this.receipt = receipt;
+    }
+
     public String getPayment_id() {
         return payment_id;
     }
@@ -111,21 +122,5 @@ public class Reimbursement {
 
     public void setType_id(String type_id) {
         this.type_id = type_id;
-    }
-
-    @Override
-    public String toString() {
-        return "Reimbursement{" +
-                "id='" + id + '\'' +
-                ", amount=" + amount +
-                ", submitted=" + submitted +
-                ", resolved=" + resolved +
-                ", description='" + description + '\'' +
-                ", payment_id='" + payment_id + '\'' +
-                ", author_id='" + author_id + '\'' +
-                ", resolver_id='" + resolver_id + '\'' +
-                ", status_id='" + status_id + '\'' +
-                ", type_id='" + type_id + '\'' +
-                '}';
     }
 }
