@@ -48,7 +48,28 @@ public class UserDAO implements CrudDAO<User> {
 
     @Override
     public List<User> findAll() {
-        return null;
+        List<User> users = new ArrayList<>();
+
+        try(Connection con = ConnectionFactory.getInstance().getConnection()) {
+            PreparedStatement ps = con.prepareStatement("SELECT * from users WHERE role_id='1'");
+            ResultSet rs = ps.executeQuery();
+            while(rs.next()) {
+                User currentUser = new User(
+                        rs.getString("id"),
+                        rs.getString("username"),
+                        rs.getString("email"),
+                        rs.getString("pwd"),
+                        rs.getString("given_name"),
+                        rs.getString("surname"),
+                        rs.getBoolean("is_active"),
+                        rs.getString("role_id")
+                );
+                users.add(currentUser);
+            }
+        }catch(SQLException e) {
+            e.printStackTrace();
+        }
+        return users;
     }
 
     /* Custom Methods */

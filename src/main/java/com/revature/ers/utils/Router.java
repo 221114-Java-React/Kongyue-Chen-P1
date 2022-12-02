@@ -8,8 +8,7 @@ import com.revature.ers.services.UserService;
 import com.revature.ers.handlers.UserHandler;
 import io.javalin.Javalin;
 
-import static io.javalin.apibuilder.ApiBuilder.path;
-import static io.javalin.apibuilder.ApiBuilder.post;
+import static io.javalin.apibuilder.ApiBuilder.*;
 
 public class Router {
     public static void router(Javalin app) {
@@ -17,13 +16,16 @@ public class Router {
         ObjectMapper mapper = new ObjectMapper();
         JwtConfig jwtConfig = new JwtConfig();
         TokenService tokenService = new TokenService(jwtConfig);
+
         UserDAO userDao = new UserDAO();
         UserService userService = new UserService(userDao);
-        UserHandler userHandler = new UserHandler(userService, mapper);
+        UserHandler userHandler = new UserHandler(userService, tokenService, mapper);
 
         AuthHandler  authHandler = new AuthHandler(userService,tokenService, mapper);
         app.routes(()-> {
             path("/users", () -> {
+                get(userHandler::getAllUsers);
+                get("/name", userHandler::getAllUsersByUsername);
                 post(c -> userHandler.signup(c) );
             });
 

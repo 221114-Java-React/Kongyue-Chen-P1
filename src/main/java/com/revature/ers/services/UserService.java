@@ -56,6 +56,10 @@ public class UserService {
         return new Principal(validUser.getId(), validUser.getUsername(), validUser.getRoleId());
     }
 
+    public List<User> getAllUsers() {
+        return userDao.findAll();
+    }
+
 
     //Validation Methods
     private boolean usernameValidation(String username) {
