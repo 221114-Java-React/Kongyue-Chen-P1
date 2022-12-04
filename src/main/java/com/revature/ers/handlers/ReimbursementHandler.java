@@ -19,7 +19,6 @@ public class ReimbursementHandler {
     private final ReimbursementService reimbursementService;
     private final TokenService tokenService;
     private final ObjectMapper mapper;
-
     private final static Logger logger = LoggerFactory.getLogger(Reimbursement.class);
 
     public ReimbursementHandler(ReimbursementService reimbursementService, TokenService tokenService, ObjectMapper mapper) {
@@ -51,6 +50,9 @@ public class ReimbursementHandler {
             if(token == null || token.isEmpty()) throw new InvalidAuthException("You are not signed in!");
             Principal principal = tokenService.extractRequestersDetails(token);
             if(principal == null) throw new InvalidAuthException("Invalid token");
+            if(principal.getRoleId().equals("2")){
+
+            }
             logger.info("Principal: "+principal.toString());
 
             reimbursementService.updateReimbursement(req);

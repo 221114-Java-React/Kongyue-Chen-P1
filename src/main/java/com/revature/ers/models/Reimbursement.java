@@ -1,16 +1,14 @@
 package com.revature.ers.models;
 
 
-import java.sql.Blob;
-import java.util.Date;
+import java.sql.Time;
 
 public class Reimbursement {
     private String id;
     private double amount;
-    private Date submitted;
-    private Date resolved;
+    private Time submitted;
+    private Time resolved;
     private String description;
-    private Blob receipt;
     private String payment_id;
     private String author_id;
     private String resolver_id;
@@ -22,13 +20,12 @@ public class Reimbursement {
         super();
     }
 
-    public Reimbursement(String id, double amount, Date submitted, Date resolved, String description, Blob receipt, String payment_id, String author_id, String resolver_id, String status_id, String type_id) {
+    public Reimbursement(String id, double amount, Time submitted, Time resolved, String description,  String payment_id, String author_id, String resolver_id, String status_id, String type_id) {
         this.id = id;
         this.amount = amount;
         this.submitted = submitted;
         this.resolved = resolved;
         this.description = description;
-        this.receipt = receipt;
         this.payment_id = payment_id;
         this.author_id = author_id;
         this.resolver_id = resolver_id;
@@ -52,19 +49,19 @@ public class Reimbursement {
         this.amount = amount;
     }
 
-    public Date getSubmitted() {
+    public Time getSubmitted() {
         return submitted;
     }
 
-    public void setSubmitted(Date submitted) {
+    public void setSubmitted(Time submitted) {
         this.submitted = submitted;
     }
 
-    public Date getResolved() {
+    public Time getResolved() {
         return resolved;
     }
 
-    public void setResolved(Date resolved) {
+    public void setResolved(Time resolved) {
         this.resolved = resolved;
     }
 
@@ -74,14 +71,6 @@ public class Reimbursement {
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public Blob getReceipt() {
-        return receipt;
-    }
-
-    public void setReceipt(Blob receipt) {
-        this.receipt = receipt;
     }
 
     public String getPayment_id() {

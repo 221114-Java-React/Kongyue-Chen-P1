@@ -6,7 +6,6 @@ import com.revature.ers.dtos.requests.NewReimbursementRequest;
 import com.revature.ers.models.Reimbursement;
 import com.revature.ers.utils.custom_exceptions.InvalidReimException;
 
-import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -19,19 +18,21 @@ public class ReimbursementService {
     }
 
     public void submitReimbursement(NewReimbursementRequest req, String id) {
-        if(req.getAmount() >= 0.00) throw new InvalidReimException("There must be a amount");
+        if(req.getAmount() < 0.01) throw new InvalidReimException("There must be a amount");
         if(req.getDescription().isEmpty()) throw new InvalidReimException("There must be a description");
+
+        long millis=System.currentTimeMillis();
+        java.sql.Time time = new java.sql.Time(millis);
 
         Reimbursement createdReimbursement = new Reimbursement(
                 UUID.randomUUID().toString(),
                 req.getAmount(),
-                new Date(),
+                time,
                 null,
                 req.getDescription(),
                 null,
-                null,
                 id,
-                "33db0fb2-b953-4cd0-8877-5c875de12cf7",
+                null,
                 "1",
                 req.getType_id()
         );

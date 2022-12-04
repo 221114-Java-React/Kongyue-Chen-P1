@@ -2,9 +2,7 @@ package com.revature.ers.dtos.requests;
 
 public class NewReimUpdateRequest {
     private String id;
-
     private String status_id;
-
     public NewReimUpdateRequest() {
         super();
     }

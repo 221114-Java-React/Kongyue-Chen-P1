@@ -2,8 +2,9 @@ package com.revature.ers.daos;
 
 import com.revature.ers.dtos.requests.NewReimUpdateRequest;
 import com.revature.ers.models.Reimbursement;
-import com.revature.ers.models.User;
+
 import com.revature.ers.utils.ConnectionFactory;
+
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -15,18 +16,17 @@ public class ReimbursementDAO implements CrudDAO<Reimbursement> {
     @Override
     public void save(Reimbursement obj) {
         try(Connection con = ConnectionFactory.getInstance().getConnection()){
-            PreparedStatement ps = con.prepareStatement("INSERT INTO reimbursement (id, amount, submitted, resolved, description, receipt, payment_id, author_id, resolver_id, status_id, type_id) VALUES (?,?,?,?,?,?,?,?,?,?,?)");
+            PreparedStatement ps = con.prepareStatement("INSERT INTO reimbursements (id, amount, submitted, resolved, description, payment_id, author_id, resolver_id, status_id, type_id) VALUES (?,?,?,?,?,?,?,?,?,?)");
             ps.setString(1, obj.getId());
             ps.setDouble(2, obj.getAmount());
-            ps.setDate(3, (Date) obj.getSubmitted());
-            ps.setDate(4, (Date) obj.getResolved());
+            ps.setTime(3, obj.getSubmitted());
+            ps.setTime(4, obj.getResolved());
             ps.setString(5, obj.getDescription());
-            ps.setBlob(6, obj.getReceipt());
-            ps.setString(7, obj.getPayment_id());
-            ps.setString(8, obj.getAuthor_id());
-            ps.setString(9, obj.getResolver_id());
-            ps.setString(10, obj.getStatus_id());
-            ps.setString(11, obj.getType_id());
+            ps.setString(6, obj.getPayment_id());
+            ps.setString(7, obj.getAuthor_id());
+            ps.setString(8, obj.getResolver_id());
+            ps.setString(9, obj.getStatus_id());
+            ps.setString(10, obj.getType_id());
 
             ps.executeUpdate();
 
@@ -61,10 +61,9 @@ public class ReimbursementDAO implements CrudDAO<Reimbursement> {
                 Reimbursement currentReim = new Reimbursement(
                         rs.getString("id"),
                         rs.getDouble("amount"),
-                        rs.getDate("submitted"),
-                        rs.getDate("resolved"),
+                        rs.getTime("submitted"),
+                        rs.getTime("resolved"),
                         rs.getString("description"),
-                        rs.getBlob("receipt"),
                         rs.getString("payment_id"),
                         rs.getString("author_id"),
                         rs.getString("resolver_id"),
@@ -82,10 +81,13 @@ public class ReimbursementDAO implements CrudDAO<Reimbursement> {
 
     public void updateReinbursement(NewReimUpdateRequest req) {
         try(Connection con = ConnectionFactory.getInstance().getConnection()) {
-            PreparedStatement ps = con.prepareStatement("UPDATE reimbursements SET resolved = ?, status_id = ? WHERE id = ?;");
-            Date tDate = (Date) new java.util.Date();
-            ps.setDate(1, tDate );
+            PreparedStatement ps = con.prepareStatement("UPDATE reimbursements SET resolved = ?, status_id = ?, resolver_id = ?  WHERE id = ?;");
+            long millis=System.currentTimeMillis();
+            java.sql.Time time = new Time(millis);
+            ps.setTime(1,time );
             ps.setString(2, req.getStatus_id());
+            ps.setString(3, req.getId());
+            ps.setString(4,"c52dc194-a97a-4483-af05-6a34316a256e");
             ps.executeUpdate();
             ps.close();
         }catch (SQLException e){
