@@ -69,7 +69,7 @@ public class UserHandler {
             if(!principal.getRoleId().equals("2")) throw new InvalidAuthException("You are not authorized");
 
             String username = ctx.req.getParameter("username");
-            List<User> users =userService.getAllUsersByUsername(username);
+            List<User> users = userService.getAllUsersByUsername(username);
             ctx.json(users);
 
         } catch (InvalidAuthException e) {

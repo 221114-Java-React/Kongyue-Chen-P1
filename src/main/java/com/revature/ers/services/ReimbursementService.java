@@ -43,7 +43,15 @@ public class ReimbursementService {
         return reimbursementDAO.findAll();
     }
 
-    public void updateReimbursement(NewReimUpdateRequest req) {
-        reimbursementDAO.updateReinbursement(req);
+    public List<Reimbursement> getAllReimbursementsById(String id) {
+        return reimbursementDAO.getAllReimbursementsById(id);
     }
+
+    public void updateReimbursement(NewReimUpdateRequest req) {
+        //To-do put some checks here
+        reimbursementDAO.updateReimbursement(req);
+    }
+
+
+    // Validation Methods
 }

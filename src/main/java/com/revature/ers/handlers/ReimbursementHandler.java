@@ -5,6 +5,7 @@ import com.revature.ers.dtos.requests.NewReimUpdateRequest;
 import com.revature.ers.dtos.requests.NewReimbursementRequest;
 import com.revature.ers.dtos.responses.Principal;
 import com.revature.ers.models.Reimbursement;
+import com.revature.ers.models.User;
 import com.revature.ers.services.ReimbursementService;
 import com.revature.ers.services.TokenService;
 import com.revature.ers.utils.custom_exceptions.InvalidAuthException;
@@ -29,12 +30,12 @@ public class ReimbursementHandler {
 
     public void submitReimbursement(Context ctx) throws IOException {
         NewReimbursementRequest req = mapper.readValue(ctx.req.getInputStream(), NewReimbursementRequest.class);
-        try{
+        try {
             String token = ctx.req.getHeader("authorization");
-            if(token == null || token.isEmpty()) throw new InvalidAuthException("You are not signed in!");
+            if (token == null || token.isEmpty()) throw new InvalidAuthException("You are not signed in!");
             Principal principal = tokenService.extractRequestersDetails(token);
-            if(principal == null) throw new InvalidAuthException("Invalid token");
-            logger.info("Principal: "+principal.toString());
+            if (principal == null) throw new InvalidAuthException("Invalid token");
+            logger.info("Principal: " + principal.toString());
 
             reimbursementService.submitReimbursement(req, principal.getId());
             ctx.status(201);
@@ -43,18 +44,16 @@ public class ReimbursementHandler {
             ctx.json(e);
         }
     }
+
     public void updateReimbursement(Context ctx) throws IOException {
         NewReimUpdateRequest req = mapper.readValue(ctx.req.getInputStream(), NewReimUpdateRequest.class);
-        try{
+        try {
             String token = ctx.req.getHeader("authorization");
-            if(token == null || token.isEmpty()) throw new InvalidAuthException("You are not signed in!");
+            if (token == null || token.isEmpty()) throw new InvalidAuthException("You are not signed in!");
             Principal principal = tokenService.extractRequestersDetails(token);
-            if(principal == null) throw new InvalidAuthException("Invalid token");
-            if(principal.getRoleId().equals("2")){
-
-            }
-            logger.info("Principal: "+principal.toString());
-
+            if (principal == null) throw new InvalidAuthException("Invalid token");
+            if (!principal.getRoleId().equals("2")) throw new InvalidAuthException("You are not authorized");
+            logger.info("Principal: " + principal.toString());
             reimbursementService.updateReimbursement(req);
             ctx.status(201);
         } catch (InvalidAuthException e) {
@@ -65,13 +64,13 @@ public class ReimbursementHandler {
 
     public void getAllReimbursement(Context ctx) {
 
-        try{
+        try {
             String token = ctx.req.getHeader("authorization");
-            if(token == null || token.isEmpty()) throw new InvalidAuthException("You are not signed in!");
+            if (token == null || token.isEmpty()) throw new InvalidAuthException("You are not signed in!");
             Principal principal = tokenService.extractRequestersDetails(token);
-            if(principal == null) throw new InvalidAuthException("Invalid token");
-            if(!principal.getRoleId().equals("2")) throw new InvalidAuthException("You are not authorized");
-            logger.info("Principal: "+principal.toString());
+            if (principal == null) throw new InvalidAuthException("Invalid token");
+            if (!principal.getRoleId().equals("2")) throw new InvalidAuthException("You are not authorized");
+            logger.info("Principal: " + principal.toString());
 
             List<Reimbursement> reimbursements = reimbursementService.getAllReimbursements();
             ctx.json(reimbursements);
@@ -81,4 +80,22 @@ public class ReimbursementHandler {
         }
     }
 
+    public void getAllReimbursementById(Context ctx) {
+        try {
+            String token = ctx.req.getHeader("authorization");
+            if (token == null || token.isEmpty()) throw new InvalidAuthException("You are not signed in!");
+            Principal principal = tokenService.extractRequestersDetails(token);
+            if (principal == null) throw new InvalidAuthException("Invalid token");
+            String id = ctx.req.getParameter("id");
+            if (!principal.getUsername().equals(id)) throw new InvalidAuthException("You are not authorized");
+
+            List<Reimbursement> reimbursements = reimbursementService.getAllReimbursementsById(id);
+            ctx.json(reimbursements);
+
+        } catch (InvalidAuthException e) {
+            ctx.status(401);
+            ctx.json(e);
+        }
+
+    }
 }

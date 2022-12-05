@@ -44,8 +44,10 @@ public class Router {
 
             path("/Reimbursement", () -> {
                 get(reimbursementHandler::getAllReimbursement);
-                put(reimbursementHandler::updateReimbursement);
+                get("user", reimbursementHandler::getAllReimbursementById);
                 post(c -> reimbursementHandler.submitReimbursement(c));
+                put(reimbursementHandler::updateReimbursement);
+
             });
         });
     }
