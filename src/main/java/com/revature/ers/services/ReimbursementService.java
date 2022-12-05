@@ -5,6 +5,7 @@ import com.revature.ers.dtos.requests.NewReimUpdateRequest;
 import com.revature.ers.dtos.requests.NewReimbursementRequest;
 import com.revature.ers.models.Reimbursement;
 import com.revature.ers.utils.custom_exceptions.InvalidReimException;
+import com.revature.ers.utils.custom_exceptions.InvalidStatusException;
 
 import java.util.List;
 import java.util.UUID;
@@ -48,7 +49,8 @@ public class ReimbursementService {
     }
 
     public void updateReimbursement(NewReimUpdateRequest req) {
-        //To-do put some checks here
+        Reimbursement requested = reimbursementDAO.findById(req.getId());
+        if(!requested.getStatus_id().equals("1")) throw new InvalidStatusException("Cannot update resolved reimbursement");
         reimbursementDAO.updateReimbursement(req);
     }
 

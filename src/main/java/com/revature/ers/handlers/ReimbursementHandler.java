@@ -74,6 +74,7 @@ public class ReimbursementHandler {
 
             List<Reimbursement> reimbursements = reimbursementService.getAllReimbursements();
             ctx.json(reimbursements);
+            ctx.status(200);
         } catch (InvalidAuthException e) {
             ctx.status(401);
             ctx.json(e);
@@ -91,6 +92,7 @@ public class ReimbursementHandler {
 
             List<Reimbursement> reimbursements = reimbursementService.getAllReimbursementsByUserId(id);
             ctx.json(reimbursements);
+            ctx.status(200);
 
         } catch (InvalidAuthException e) {
             ctx.status(401);
