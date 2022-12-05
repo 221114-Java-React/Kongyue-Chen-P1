@@ -25,18 +25,7 @@ public class UserService {
     Uses the NewUserRequest object to fill out the user constructor
     Also assigns out the default ID, ACTIVE, ROLE
     */
-    public void saveUser(NewUserRequest req) {
-        List<String> usernames = userDao.findAllUserNames();
-        List<String> emails = userDao.findAllEmails();
-
-        if(!usernameValidation(req.getUsername())) throw new InvalidUserException("Username needs to be 8-20 Characters");
-        if(usernames.contains(req.getUsername())) throw new InvalidUserException("Username is already taken");
-        if(emails.contains(req.getEmail())) throw new InvalidUserException("Email is already taken");
-
-        if(!passwordValidation(req.getPassword1())) throw new InvalidUserException("Passwords need to contain minimum of 8 characters");
-        if(!req.getPassword1().equals(req.getPassword2())) throw new InvalidUserException("Password do not match.");
-
-
+    public User signup(NewUserRequest req) {
 
         User createdUser = new User(
                 UUID.randomUUID().toString(),
@@ -50,6 +39,7 @@ public class UserService {
         );
 
         userDao.save(createdUser);
+        return createdUser;
     }
 
     public Principal login(NewLoginRequest req) {
@@ -67,12 +57,24 @@ public class UserService {
     }
 
 
-    //Validation Methods
-    private boolean usernameValidation(String username) {
+    public boolean isValidUsername(String username) {
         return username.matches("^(?=[a-zA-Z0-9._]{8,20}$)(?!.*[_.]{2})[^_.].*[^_.]$");
     }
+    public boolean isDuplicateUsername(String username) {
+        List<String> usernames = userDao.findAllUserNames();
+        return usernames.contains(username);
+    }
 
-    private boolean passwordValidation(String password) {
+    public boolean isDuplicateEmail(String email) {
+        List<String> emails = userDao.findAllEmails();
+        return emails.contains(email);
+    }
+
+    public boolean isValidPassword(String password) {
         return password.matches("^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{8,}$");
+    }
+
+    public boolean isSamePassword(String password1, String password2) {
+        return password1.equals(password2);
     }
 }
