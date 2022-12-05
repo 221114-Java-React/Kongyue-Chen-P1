@@ -82,6 +82,25 @@ public class ReimbursementHandler {
         }
     }
 
+    public void getAllReimbursementByStatus(Context ctx) {
+        try {
+            String token = ctx.req.getHeader("authorization");
+            if (token == null || token.isEmpty()) throw new InvalidAuthException("You are not signed in!");
+            Principal principal = tokenService.extractRequestersDetails(token);
+            if (principal == null) throw new InvalidAuthException("Invalid token");
+            if (!principal.getRoleId().equals("2")) throw new InvalidAuthException("You are not authorized");
+            logger.info("Principal: " + principal.toString());
+
+            String status = ctx.req.getParameter("status");
+            List<Reimbursement> reimbursements = reimbursementService.getAllReimbursementsByStatus(status);
+            ctx.json(reimbursements);
+            ctx.status(200);
+        } catch (InvalidAuthException e) {
+            ctx.status(401);
+            ctx.json(e);
+        }
+    }
+
     public void getAllReimbursementsByUserId(Context ctx) {
         try {
             String token = ctx.req.getHeader("authorization");
@@ -92,6 +111,27 @@ public class ReimbursementHandler {
             if (!principal.getId().equals(id)) throw new InvalidAuthException("You are not authorized");
 
             List<Reimbursement> reimbursements = reimbursementService.getAllReimbursementsByUserId(id);
+            ctx.json(reimbursements);
+            ctx.status(200);
+
+        } catch (InvalidAuthException e) {
+            ctx.status(401);
+            ctx.json(e);
+        }
+
+    }
+
+    public void getAllReimUserAndStatus(Context ctx) {
+        try {
+            String token = ctx.req.getHeader("authorization");
+            if (token == null || token.isEmpty()) throw new InvalidAuthException("You are not signed in!");
+            Principal principal = tokenService.extractRequestersDetails(token);
+            if (principal == null) throw new InvalidAuthException("Invalid token");
+            String id = ctx.req.getParameter("id");
+            String status = ctx.req.getParameter("status");
+            if (!principal.getId().equals(id)) throw new InvalidAuthException("You are not authorized");
+
+            List<Reimbursement> reimbursements = reimbursementService.getAllReimUserAndStatus(id, status);
             ctx.json(reimbursements);
             ctx.status(200);
 

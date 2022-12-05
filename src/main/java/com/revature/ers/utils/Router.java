@@ -43,12 +43,15 @@ public class Router {
             });
 
             path("/Reimbursement", () -> {
-                get("user", reimbursementHandler::getAllReimbursementsByUserId);
                 get(reimbursementHandler::getAllReimbursement);
+                get("user", reimbursementHandler::getAllReimbursementsByUserId);
+                get("user/s", reimbursementHandler::getAllReimUserAndStatus);
+                get("status", reimbursementHandler::getAllReimbursementByStatus); //Admin
                 post(c -> reimbursementHandler.submitReimbursement(c));
                 put(reimbursementHandler::updateReimbursement);
 
             });
+
         });
     }
 }

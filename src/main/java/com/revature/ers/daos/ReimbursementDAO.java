@@ -105,6 +105,36 @@ public class ReimbursementDAO implements CrudDAO<Reimbursement> {
         return reimbursements;
     }
 
+    public List<Reimbursement> finaAllByStatus(String status) {
+        List<Reimbursement> reimbursements = new ArrayList<>();
+
+        try(Connection con = ConnectionFactory.getInstance().getConnection()) {
+            PreparedStatement ps = con.prepareStatement("SELECT * FROM reimbursements WHERE status_id =?");
+            ps.setString(1, status);
+            ResultSet rs = ps.executeQuery();
+            while(rs.next()) {
+                Reimbursement current = new Reimbursement(
+                        rs.getString("id"),
+                        rs.getDouble("amount"),
+                        rs.getTime("submitted"),
+                        rs.getTime("resolved"),
+                        rs.getString("description"),
+                        rs.getString("payment_id"),
+                        rs.getString("author_id"),
+                        rs.getString("resolver_id"),
+                        rs.getString("status_id"),
+                        rs.getString("type_id")
+
+                );
+                reimbursements.add(current);
+            }
+        }catch(SQLException e) {
+            e.printStackTrace();
+        }
+
+        return reimbursements;
+    }
+
     public void updateReimbursement(NewReimUpdateRequest req, String resolverId) {
         try(Connection con = ConnectionFactory.getInstance().getConnection()) {
             PreparedStatement ps = con.prepareStatement("UPDATE reimbursements SET resolved = ?, status_id = ?, resolver_id = ?  WHERE id = ?;");
@@ -149,4 +179,38 @@ public class ReimbursementDAO implements CrudDAO<Reimbursement> {
         }
         return reimbursements;
     }
+
+    public List<Reimbursement> getAllReimUserAndStatus(String id, String status) {
+        List<Reimbursement> reimbursements = new ArrayList<>();
+        try(Connection con = ConnectionFactory.getInstance().getConnection()) {
+            PreparedStatement ps = con.prepareStatement("SELECT * FROM reimbursements WHERE author_id =? AND status_id=?");
+            ps.setString(1, id);
+            ps.setString(2, status);
+
+            ResultSet rs = ps.executeQuery();
+
+            while(rs.next()) {
+                Reimbursement reimbursement = new Reimbursement(
+                        rs.getString("id"),
+                        rs.getDouble("amount"),
+                        rs.getTime("submitted"),
+                        rs.getTime("resolved"),
+                        rs.getString("description"),
+                        rs.getString("payment_id"),
+                        rs.getString("author_id"),
+                        rs.getString("resolver_id"),
+                        rs.getString("status_id"),
+                        rs.getString("type_id")
+
+                );
+                reimbursements.add(reimbursement);
+            }
+        }catch(SQLException e){
+            e.printStackTrace();
+        }
+        return reimbursements;
+    }
+
+
+
 }
