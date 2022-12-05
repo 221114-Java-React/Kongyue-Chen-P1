@@ -18,7 +18,7 @@ public class ReimbursementService {
         this.reimbursementDAO = reimbursementDAO;
     }
 
-    public void submitReimbursement(NewReimbursementRequest req, String id) {
+    public Reimbursement submitReimbursement(NewReimbursementRequest req, String id) {
         if(req.getAmount() < 0.01) throw new InvalidReimException("There must be a amount");
         if(req.getDescription().isEmpty()) throw new InvalidReimException("There must be a description");
 
@@ -38,6 +38,7 @@ public class ReimbursementService {
                 req.getType_id()
         );
         reimbursementDAO.save(createdReimbursement);
+        return createdReimbursement;
     }
 
     public List<Reimbursement> getAllReimbursements() {
