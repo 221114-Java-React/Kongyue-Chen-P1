@@ -27,9 +27,11 @@ public class UserService {
     */
     public void saveUser(NewUserRequest req) {
         List<String> usernames = userDao.findAllUserNames();
+        List<String> emails = userDao.findAllEmails();
 
         if(!usernameValidation(req.getUsername())) throw new InvalidUserException("Username needs to be 8-20 Characters");
         if(usernames.contains(req.getUsername())) throw new InvalidUserException("Username is already taken");
+        if(emails.contains(req.getEmail())) throw new InvalidUserException("Email is already taken");
 
         if(!passwordValidation(req.getPassword1())) throw new InvalidUserException("Passwords need to contain minimum of 8 characters");
         if(!req.getPassword1().equals(req.getPassword2())) throw new InvalidUserException("Password do not match.");

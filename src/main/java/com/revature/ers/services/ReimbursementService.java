@@ -48,12 +48,11 @@ public class ReimbursementService {
         return reimbursementDAO.getAllReimbursementsByUserId(id);
     }
 
-    public void updateReimbursement(NewReimUpdateRequest req) {
+    public void updateReimbursement(NewReimUpdateRequest req, String resolverId) {
         Reimbursement requested = reimbursementDAO.findById(req.getId());
-        if(!requested.getStatus_id().equals("1")) throw new InvalidStatusException("Cannot update resolved reimbursement");
-        reimbursementDAO.updateReimbursement(req);
+        if(!(requested.getStatus_id().equals("1"))) throw new InvalidStatusException("Cannot update resolved reimbursement");
+
+        reimbursementDAO.updateReimbursement(req, resolverId);
     }
 
-
-    // Validation Methods
 }

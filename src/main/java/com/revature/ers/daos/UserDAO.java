@@ -89,6 +89,22 @@ public class UserDAO implements CrudDAO<User> {
         return usernames;
     }
 
+    public List<String> findAllEmails() {
+        List<String> emails = new ArrayList<>();
+        try(Connection con = ConnectionFactory.getInstance().getConnection()) {
+            PreparedStatement ps = con.prepareStatement("SELECT (email) from users");
+            ResultSet rs = ps.executeQuery();
+
+            while(rs.next()){
+                String currentEmail = rs.getString("email");
+                emails.add(currentEmail);
+            }
+        }catch (SQLException e){
+            e.printStackTrace();
+        }
+        return emails;
+    }
+
     public User getUserByUsernameAndPassword(String username, String password) {
         User user = null;
         try (Connection con = ConnectionFactory.getInstance().getConnection()) {

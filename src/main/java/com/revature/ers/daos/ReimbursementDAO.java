@@ -48,9 +48,9 @@ public class ReimbursementDAO implements CrudDAO<Reimbursement> {
 
     @Override
     public Reimbursement findById(String id) {
-        Reimbursement reimbursement = null;
+        Reimbursement reimbursement = new Reimbursement();
         try(Connection con = ConnectionFactory.getInstance().getConnection()){
-            PreparedStatement ps = con.prepareStatement("SELECT * FROM reimbursements WHERE author_id = ?");
+            PreparedStatement ps = con.prepareStatement("SELECT * FROM reimbursements WHERE id = ?");
             ps.setString(1,id);
             ResultSet rs = ps.executeQuery();
             while(rs.next()) {
@@ -80,10 +80,10 @@ public class ReimbursementDAO implements CrudDAO<Reimbursement> {
         List<Reimbursement> reimbursements = new ArrayList<>();
 
         try(Connection con = ConnectionFactory.getInstance().getConnection()) {
-            PreparedStatement ps = con.prepareStatement("SELECT * FROM reimbursements WHERE status_id='1'");
+            PreparedStatement ps = con.prepareStatement("SELECT * FROM reimbursements");
             ResultSet rs = ps.executeQuery();
             while(rs.next()) {
-                Reimbursement currentReim = new Reimbursement(
+                Reimbursement current = new Reimbursement(
                         rs.getString("id"),
                         rs.getDouble("amount"),
                         rs.getTime("submitted"),
@@ -96,7 +96,7 @@ public class ReimbursementDAO implements CrudDAO<Reimbursement> {
                         rs.getString("type_id")
 
                         );
-                reimbursements.add(currentReim);
+                reimbursements.add(current);
             }
         }catch(SQLException e) {
             e.printStackTrace();
@@ -105,15 +105,15 @@ public class ReimbursementDAO implements CrudDAO<Reimbursement> {
         return reimbursements;
     }
 
-    public void updateReimbursement(NewReimUpdateRequest req) {
+    public void updateReimbursement(NewReimUpdateRequest req, String resolverId) {
         try(Connection con = ConnectionFactory.getInstance().getConnection()) {
             PreparedStatement ps = con.prepareStatement("UPDATE reimbursements SET resolved = ?, status_id = ?, resolver_id = ?  WHERE id = ?;");
             long millis=System.currentTimeMillis();
             java.sql.Time time = new Time(millis);
             ps.setTime(1,time );
             ps.setString(2, req.getStatus_id());
-            ps.setString(3, req.getId());
-            ps.setString(4,"c52dc194-a97a-4483-af05-6a34316a256e");
+            ps.setString(3, resolverId);
+            ps.setString(4,req.getId());
             ps.executeUpdate();
             ps.close();
         }catch (SQLException e){
