@@ -47,8 +47,32 @@ public class ReimbursementDAO implements CrudDAO<Reimbursement> {
     }
 
     @Override
-    public Reimbursement findById() {
-        return null;
+    public Reimbursement findById(String id) {
+        Reimbursement reimbursement = null;
+        try(Connection con = ConnectionFactory.getInstance().getConnection()){
+            PreparedStatement ps = con.prepareStatement("SELECT * FROM reimbursements WHERE author_id = ?");
+            ps.setString(1,id);
+            ResultSet rs = ps.executeQuery();
+            while(rs.next()) {
+                reimbursement = new Reimbursement(
+                        rs.getString("id"),
+                        rs.getDouble("amount"),
+                        rs.getTime("submitted"),
+                        rs.getTime("resolved"),
+                        rs.getString("description"),
+                        rs.getString("payment_id"),
+                        rs.getString("author_id"),
+                        rs.getString("resolver_id"),
+                        rs.getString("status_id"),
+                        rs.getString("type_id")
+
+                );
+            }
+
+        }catch(SQLException e){
+            e.printStackTrace();
+        }
+        return reimbursement;
     }
 
     @Override
@@ -56,7 +80,7 @@ public class ReimbursementDAO implements CrudDAO<Reimbursement> {
         List<Reimbursement> reimbursements = new ArrayList<>();
 
         try(Connection con = ConnectionFactory.getInstance().getConnection()) {
-            PreparedStatement ps = con.prepareStatement("SELECT * from reimbursement WHERE status_id='1'");
+            PreparedStatement ps = con.prepareStatement("SELECT * FROM reimbursements WHERE status_id='1'");
             ResultSet rs = ps.executeQuery();
             while(rs.next()) {
                 Reimbursement currentReim = new Reimbursement(
@@ -97,7 +121,7 @@ public class ReimbursementDAO implements CrudDAO<Reimbursement> {
         }
     }
 
-    public List<Reimbursement> getAllReimbursementsById(String id) {
+    public List<Reimbursement> getAllReimbursementsByUserId(String id) {
         List<Reimbursement> reimbursements = new ArrayList<>();
         try(Connection con = ConnectionFactory.getInstance().getConnection()) {
             PreparedStatement ps = con.prepareStatement("SELECT * FROM reimbursements WHERE author_id = ?");

@@ -43,8 +43,8 @@ public class ReimbursementService {
         return reimbursementDAO.findAll();
     }
 
-    public List<Reimbursement> getAllReimbursementsById(String id) {
-        return reimbursementDAO.getAllReimbursementsById(id);
+    public List<Reimbursement> getAllReimbursementsByUserId(String id) {
+        return reimbursementDAO.getAllReimbursementsByUserId(id);
     }
 
     public void updateReimbursement(NewReimUpdateRequest req) {

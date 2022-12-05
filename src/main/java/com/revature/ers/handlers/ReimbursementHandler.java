@@ -80,7 +80,7 @@ public class ReimbursementHandler {
         }
     }
 
-    public void getAllReimbursementById(Context ctx) {
+    public void getAllReimbursementsByUserId(Context ctx) {
         try {
             String token = ctx.req.getHeader("authorization");
             if (token == null || token.isEmpty()) throw new InvalidAuthException("You are not signed in!");
@@ -89,7 +89,7 @@ public class ReimbursementHandler {
             String id = ctx.req.getParameter("id");
             if (!principal.getUsername().equals(id)) throw new InvalidAuthException("You are not authorized");
 
-            List<Reimbursement> reimbursements = reimbursementService.getAllReimbursementsById(id);
+            List<Reimbursement> reimbursements = reimbursementService.getAllReimbursementsByUserId(id);
             ctx.json(reimbursements);
 
         } catch (InvalidAuthException e) {
